@@ -1,0 +1,36 @@
+T3250 000:350.868   SEGGER J-Link V6.64 Log File
+T3250 000:350.984   DLL Compiled: Mar 13 2020 15:55:42
+T3250 000:350.989   Logging started @ 2024-08-23 01:56
+T3250 000:351.022 JLINK_Open()
+T3250 000:357.303   Firmware: J-Link V9 compiled May  7 2021 16:26:12
+T3250 000:357.443   Decompressing FW timestamp took 114 us
+T3250 000:363.190   Hardware: V9.70
+T3250 000:363.206   S/N: 59768883
+T3250 000:363.213   OEM: SEGGER
+T3250 000:363.219   Feature(s): RDI, GDB, FlashDL, FlashBP, JFlash
+T3250 000:364.182   TELNET listener socket opened on port 19021
+T3250 000:364.301   WEBSRV Starting webserver
+T3250 000:364.424   WEBSRV Webserver running on local port 19080
+T3250 000:364.480 - 13.461ms returns O.K.
+T3250 000:364.667 JLINK_GetDLLVersion()  returns 66400
+T3250 000:364.950 JLINK_GetHardwareVersion()
+T3250 000:364.963 - 0.014ms returns 0x17AE8
+T3250 000:365.131 JLINK_ExecCommand("device = ", ...). 
+T3250 000:371.267   Looking for J-Link GUI Server exe at: D:\Projects\Jlink_Tool\Jlink_Tool\bin\Debug\JLinkGUIServer.exe
+T3250 000:371.335   Looking for J-Link GUI Server exe at: D:\SEGGER\JLink\JLinkGUIServer.exe
+T3250 000:371.350   Forking J-Link GUI Server: D:\SEGGER\JLink\JLinkGUIServer.exe
+T3250 000:374.681   J-Link GUI Server info: "J-Link GUI server V7.92g "
+T3250 008:163.570 - 7798.447ms returns 0xFFFFFFFF
+T3250 008:164.517 JLINK_TIF_Select(JLINKARM_TIF_SWD)
+T3250 008:165.373 - 0.862ms returns 0x00
+T3250 008:165.474 JLINK_SetSpeed(4000)
+T3250 008:165.588 - 0.119ms
+T3250 008:165.612   JLINK_RTTERMINAL_Control(Cmd = JLINKARM_RTTERMINAL_CMD_START)
+T3250 008:165.655     returns 0x00
+T3250 008:266.295 JLINK_Connect()
+T3250 008:266.548   
+  ***** Error: 
+T3250 008:266.560   No CPU core or target device has been selected. Please make sure at least the core J-Link shall connect to, is selected.
+T3250 008:266.566 - 0.274ms returns 0xFFFFFEEF
+T3250 009:495.043   
+T3250 009:495.105   Closed
