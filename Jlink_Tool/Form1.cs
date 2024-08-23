@@ -18,8 +18,8 @@ namespace Jlink_Tool
         {
             InitializeComponent();
 
-            Jlink_handler = new JlinkHandler("", 4000);
-            //Jlink_handler.NotifyRecvPacket += JLink_RecvPacket;
+            Jlink_handler = new JlinkHandler("N", 4000);
+            Jlink_handler.NotifyRecvPacket += JLink_RecvPacket;
             richTextBox1.Text = "";
         }
 
@@ -84,6 +84,23 @@ namespace Jlink_Tool
             catch { }
         }
 
+        private void JLink_RecvPacket(object sender, RecvPacket e)
+        {
+            try
+            {
+                if (e.Length > 0)
+                {
+                    var param = e;
+                    richTextBox1.Invoke((MethodInvoker)delegate
+                    {
+                        RxTxBox_Write(param.DataRecv, e.TextColor);
+                    });
+                    
+                }
+            }
+            catch { }
+        }
+
         private void btDisconnect_Click(object sender, EventArgs e)
         {
             try
@@ -144,9 +161,18 @@ namespace Jlink_Tool
 
             richTextBox1.ScrollToCaret();
             richTextBox1.SelectedText = ShowStr;
-            richTextBox1.SelectionColor = Color.Black;
+            richTextBox1.SelectionColor = Color.FromArgb(0xCC, 0xCC, 0xCC);//Color.White;
             richTextBox1.SelectionStart = richTextBox1.Text.Length;
 
+        }
+
+        private void btRTT_Send_Click(object sender, EventArgs e)
+        {
+            if (JlinkDll.JLINKARM_IsConnected())
+            {
+                JlinkDll.JLINK_RTTERMINAL_Write(0, Encoding.ASCII.GetBytes($"{tbRTT_Send.Text}\r\n"), (uint)tbRTT_Send.Text.Length + 2);
+                rTb_LogTerminal.Focus();
+            }
         }
     }
 }

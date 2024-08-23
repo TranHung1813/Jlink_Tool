@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO.Ports;
 using System.Linq;
 using System.Management;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -106,11 +107,11 @@ namespace Jlink_Tool
                 MessageBox.Show("Có lỗi xảy ra, vui lòng kiểm tra lại kết nối Jlink", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            //if (string.IsNullOrEmpty(DeviceName) | Speed == 0)
-            //{
-            //    MessageBox.Show("Có lỗi xảy ra, vui lòng kiểm tra lại kết nối Jlink", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //    return;
-            //}
+            if (string.IsNullOrEmpty(DeviceName) | Speed == 0)
+            {
+                MessageBox.Show("Có lỗi xảy ra, vui lòng kiểm tra lại kết nối Jlink", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             //rTb_LogTerminal.AppendText("Stop: " + JlinkHandler.JLINK_RTTERMINAL_Control(1, 0));
             JlinkDll.JLINKARM_Close();
@@ -166,12 +167,14 @@ namespace Jlink_Tool
             JlinkDll.JLINKARM_SetLogFile(Encoding.UTF8.GetBytes("temp.txt"));
         }
 
-        Color txtColor = Color.White;
+        Color txtColor = Color.FromArgb(0xCC, 0xCC, 0xCC);// Color.White;
+        
         private void JlinkLog_Thread()
         {
             int countNoData = 0;
             int countDisconnect = 0;
             string mess;
+            bool isReconnected = false;
             while (true)
             {
                 try
@@ -179,54 +182,59 @@ namespace Jlink_Tool
                     if (JlinkDll.JLINKARM_IsConnected())
                     {
                         mess = JlinkDll.JLINKARM_ReadRTT_String();
-                        //if (mess.Replace("\0", "").Length > 0)
-                        //{
-                        //    string pattern = @"(\r\n)";
-                        //    string tmp_mess = mess
-                        //                .Replace("\u001b[2;32m", "").Replace("\u001b[32m", "[I]")
-                        //                .Replace("\u001b[2;31m", "").Replace("\u001b[31m", "[E]")
-                        //                .Replace("\u001b[2;33m", "").Replace("\u001b[33m", "[W]")
-                        //                .Replace("\u001b[2;35m", "").Replace("\u001b[35m", "[V]")
-                        //                //.Replace("\u001b[0m", "")
-                        //                .Replace("\0", "");
-                        //    string[] mess_buff = Regex
-                        //                .Split(tmp_mess, pattern)
-                        //                .Where(i => i != "").ToArray();
-                        //    foreach (string s in mess_buff)
-                        //    {
-                        //        if (s.Contains("[E]"))
-                        //            txtColor = Color.Red;
-                        //        else if (s.Contains("[I]"))
-                        //            txtColor = Color.Lime;
-                        //        else if (s.Contains("[W]"))
-                        //            txtColor = Color.Yellow;
-                        //        else if (s.Contains("[V]"))
-                        //            txtColor = Color.Fuchsia;
-                        //        else if(s.Contains("\u001b[0m"))
-                        //            txtColor = Color.White;
+                        string recvText = "";
+                        if (mess.Replace("\0", "").Length > 0)
+                        {
+                            AppendAnsiColoredText(mess.Replace("\0", ""), ref recvText, ref txtColor);
+                            //if (mess.Replace("\0", "").Length > 0)
+                            //{
+                            //    string pattern = @"(\r\n)";
+                            //    string tmp_mess = mess
+                            //                .Replace("\u001b[2;32m", "").Replace("\u001b[32m", "[I]")
+                            //                .Replace("\u001b[2;31m", "").Replace("\u001b[31m", "[E]")
+                            //                .Replace("\u001b[2;33m", "").Replace("\u001b[33m", "[W]")
+                            //                .Replace("\u001b[2;35m", "").Replace("\u001b[35m", "[V]")
+                            //                //.Replace("\u001b[0m", "")
+                            //                .Replace("\0", "");
+                            //    string[] mess_buff = Regex
+                            //                .Split(tmp_mess, pattern)
+                            //                .Where(i => i != "").ToArray();
+                            //    foreach (string s in mess_buff)
+                            //    {
+                            //        if (s.Contains("[E]"))
+                            //            txtColor = Color.Red;
+                            //        else if (s.Contains("[I]"))
+                            //            txtColor = Color.Lime;
+                            //        else if (s.Contains("[W]"))
+                            //            txtColor = Color.Yellow;
+                            //        else if (s.Contains("[V]"))
+                            //            txtColor = Color.Fuchsia;
+                            //        else if(s.Contains("\u001b[0m"))
+                            //            txtColor = Color.White;
 
-                        //        string msg = s.Replace("\u001b[0m", "");
-                        //        OnNotifyRecvPacket(msg, msg.Length, txtColor);
-                        //    }
-                        //    countNoData = 0;
-                        //}
-                        //else
-                        //{
-                        //    if (++countNoData % 50 == 0)
-                        //    {
-                        //        // NO DATA for long time
-                        //        //OnNotifyRecvPacket("NO DATA\r\n", "NO DATA\r\n".Length, Color.Red);
-                        //        if (countNoData >= 200)
-                        //        {
-                        //            countNoData = 0;
-                        //            // Reconnect
-                        //            if (!string.IsNullOrEmpty(GetJlink_PortName()))
-                        //            {
-                        //                //JlinkReconnect();
-                        //            }
-                        //        }
-                        //    }
-                        //}
+                            //        string msg = s.Replace("\u001b[0m", "");
+                            //OnNotifyRecvPacket(recvText, recvText.Length, textColor);
+                            //    }
+                            //    countNoData = 0;
+                            //}
+                            //else
+                            //{
+                            //    if (++countNoData % 50 == 0)
+                            //    {
+                            //        // NO DATA for long time
+                            //        //OnNotifyRecvPacket("NO DATA\r\n", "NO DATA\r\n".Length, Color.Red);
+                            //        if (countNoData >= 200)
+                            //        {
+                            //            countNoData = 0;
+                            //            // Reconnect
+                            //            if (!string.IsNullOrEmpty(GetJlink_PortName()))
+                            //            {
+                            //                //JlinkReconnect();
+                            //            }
+                            //        }
+                            //    }
+                            //}
+                        }
                     }
                     else if (++countDisconnect >= 30)
                     {
@@ -235,7 +243,8 @@ namespace Jlink_Tool
                         // Reconnect
                         if (!string.IsNullOrEmpty(GetJlink_PortName()))
                         {
-                            //JlinkReconnect();
+                            //JlinkReconnect_without_Reset();
+                            //isReconnected = false;
                         }
 
                     }
@@ -245,6 +254,88 @@ namespace Jlink_Tool
                     OnNotifyRecvPacket("ERROR\r\n", "ERROR\r\n".Length, Color.Red);
                 }
                 Thread.Sleep(100);
+            }
+        }
+
+        private void AppendAnsiColoredText(string text, ref string outText, ref Color outColor)
+        {
+            // Regex to match ANSI escape codes
+            string ansiRegex = @"\x1B\[(?<code>[0-9;]*)m";
+            var matches = Regex.Matches(text, ansiRegex);
+
+            int lastIndex = 0;
+            foreach (Match match in matches)
+            {
+                // Add text before the ANSI code
+                if (match.Index > lastIndex)
+                {
+                    outText = (text.Substring(lastIndex, match.Index - lastIndex));
+                }
+                else outText = "";
+
+                //
+                OnNotifyRecvPacket(outText, outText.Length, outColor);
+
+                // Parse the ANSI code and get the color
+                string ansiCode = match.Groups["code"].Value;
+                ApplyAnsiCode(ansiCode, ref outColor);
+
+                lastIndex = match.Index + match.Length;
+            }
+
+            // Add remaining text after the last ANSI code
+            if (lastIndex < text.Length)
+            {
+                outText = (text.Substring(lastIndex));
+
+                OnNotifyRecvPacket(outText, outText.Length, outColor);
+            }
+        }
+
+        private void ApplyAnsiCode(string ansiCode, ref Color textColor)
+        {
+            string[] codes = ansiCode.Split(';');
+            foreach (string code in codes)
+            {
+                if (int.TryParse(code, out int codeInt))
+                {
+                    switch (codeInt)
+                    {
+                        case 0:
+                            // Reset to default color
+                            textColor = Color.FromArgb(0xCC, 0xCC, 0xCC); //Color.White;
+                            break;
+                        case 2:
+                            // Dim (handled by applying a lighter color later)
+                            break;
+                        case 30:
+                            textColor = Color.Black;
+                            break;
+                        case 31:
+                            textColor = Color.FromArgb(0xC5, 0x0F, 0x1F); //Color.Red;
+                            break;
+                        case 32:
+                            textColor = Color.FromArgb(0x13, 0xA1, 0x0E); //Color.Green;
+                            break;
+                        case 33:
+                            textColor = Color.FromArgb(0xC1, 0x9C, 0x00); //Color.Yellow;
+                            break;
+                        case 34:
+                            textColor = Color.Blue;
+                            break;
+                        case 35:
+                            textColor = Color.FromArgb(0x88, 0x17, 0x98); //Color.Magenta;
+                            break;
+                        case 36:
+                            textColor = Color.Cyan;
+                            break;
+                        case 37:
+                            textColor = Color.FromArgb(0xCC, 0xCC, 0xCC); //Color.White;
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
         }
 
@@ -263,6 +354,20 @@ namespace Jlink_Tool
             JlinkDll.JLINKARM_Halt();
             Thread.Sleep(100);
             JlinkDll.JLINKARM_Go();
+        }
+
+        private void JlinkReconnect_without_Reset()
+        {
+            JlinkDll.JLINK_RTTERMINAL_Control(1, 0);
+            JlinkDll.JLINKARM_Close();
+            Thread.Sleep(100);
+            JlinkDll.JLINKARM_Open();
+            JlinkDll.JLINKARM_ExecCommand(Encoding.UTF8.GetBytes($"device = {DeviceName}"), 0, 0);
+            JlinkDll.JLINKARM_TIF_Select(1);
+            JlinkDll.JLINKARM_SetSpeed(Speed);
+            JlinkDll.JLINK_RTTERMINAL_Control(0, 0);
+            Thread.Sleep(100);
+            JlinkDll.JLINKARM_Connect();
         }
 
         public void StopLog()
