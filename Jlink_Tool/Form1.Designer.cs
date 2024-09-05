@@ -35,11 +35,12 @@
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.tbRTT_Send = new System.Windows.Forms.TextBox();
             this.btRTT_Send = new System.Windows.Forms.Button();
+            this.tbDeviceName = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // btConnect
             // 
-            this.btConnect.Location = new System.Drawing.Point(642, 273);
+            this.btConnect.Location = new System.Drawing.Point(642, 276);
             this.btConnect.Name = "btConnect";
             this.btConnect.Size = new System.Drawing.Size(137, 39);
             this.btConnect.TabIndex = 0;
@@ -58,7 +59,7 @@
             // 
             // bt_Connect_wthoutHalt
             // 
-            this.bt_Connect_wthoutHalt.Location = new System.Drawing.Point(407, 273);
+            this.bt_Connect_wthoutHalt.Location = new System.Drawing.Point(407, 276);
             this.bt_Connect_wthoutHalt.Name = "bt_Connect_wthoutHalt";
             this.bt_Connect_wthoutHalt.Size = new System.Drawing.Size(129, 39);
             this.bt_Connect_wthoutHalt.TabIndex = 2;
@@ -68,7 +69,7 @@
             // 
             // btDisconnect
             // 
-            this.btDisconnect.Location = new System.Drawing.Point(552, 273);
+            this.btDisconnect.Location = new System.Drawing.Point(552, 276);
             this.btDisconnect.Name = "btDisconnect";
             this.btDisconnect.Size = new System.Drawing.Size(75, 39);
             this.btDisconnect.TabIndex = 3;
@@ -105,11 +106,21 @@
             this.btRTT_Send.UseVisualStyleBackColor = true;
             this.btRTT_Send.Click += new System.EventHandler(this.btRTT_Send_Click);
             // 
+            // tbDeviceName
+            // 
+            this.tbDeviceName.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
+            this.tbDeviceName.Location = new System.Drawing.Point(407, 245);
+            this.tbDeviceName.Name = "tbDeviceName";
+            this.tbDeviceName.Size = new System.Drawing.Size(129, 24);
+            this.tbDeviceName.TabIndex = 7;
+            this.tbDeviceName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 331);
+            this.Controls.Add(this.tbDeviceName);
             this.Controls.Add(this.rTb_LogTerminal);
             this.Controls.Add(this.btRTT_Send);
             this.Controls.Add(this.tbRTT_Send);
@@ -133,6 +144,7 @@
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.TextBox tbRTT_Send;
         private System.Windows.Forms.Button btRTT_Send;
+        private System.Windows.Forms.TextBox tbDeviceName;
     }
 }
 

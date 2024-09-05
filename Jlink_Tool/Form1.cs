@@ -49,6 +49,7 @@ namespace Jlink_Tool
                 "-----------------------------------------------------------" +
                 "-----------------------------------------------------------" +
                 "\r\n");
+                Jlink_handler.ChangeDeviceName(tbDeviceName.Text);
                 Jlink_handler?.StopLog();
                 //ReadFile();
                 //logInfo = new Jlink_LogInfo
@@ -73,6 +74,7 @@ namespace Jlink_Tool
                 "-----------------------------------------------------------" +
                 "-----------------------------------------------------------" +
                 "\r\n");
+                Jlink_handler.ChangeDeviceName(tbDeviceName.Text);
                 Jlink_handler?.StopLog();
 
                 Jlink_handler?.StartLog_without_Halt();
@@ -111,6 +113,22 @@ namespace Jlink_Tool
             catch { }
         }
 
+        private static string GetInfo_fromString(string buff, string key, string endString)
+        {
+            string ret = "";
+            try
+            {
+                if (buff.Contains(key))
+                {
+                    string temp = buff.Substring(buff.IndexOf(key));
+                    int length = temp.IndexOf(endString) - key.Length;
+                    ret = temp.Substring(key.Length, length);
+                }
+            }
+            catch { }
+            return ret;
+        }
+
         private void Read_Log()
         {
             string filePath = "this_log.txt";
@@ -126,6 +144,11 @@ namespace Jlink_Tool
                         string content = reader.ReadToEnd();
                         this.Invoke((MethodInvoker)delegate
                         {
+                            if (content.Contains("Device "))
+                            {
+                                string device = GetInfo_fromString(content, "Device \"", "\" selected.");
+                                tbDeviceName.Text = device;
+                            }
                             //richTextBox1.Text = content;
                             //richTextBox1.SelectionStart = richTextBox1.TextLength;
                             //richTextBox1.ScrollToCaret();

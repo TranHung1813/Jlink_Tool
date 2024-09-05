@@ -28,6 +28,14 @@ namespace Jlink_Tool
             jlinklog_trd = new Thread(new ThreadStart(() => JlinkLog_Thread()));
             jlinklog_trd.IsBackground = true;
         }
+        public void ChangeDeviceName(string _DeviceName)
+        {
+            if (string.IsNullOrEmpty(_DeviceName))
+            {
+                _DeviceName = "N";
+            }
+            DeviceName = _DeviceName;
+        }
         public void StartLog()
         {
             if (string.IsNullOrEmpty(GetJlink_PortName()))
